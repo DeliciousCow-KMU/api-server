@@ -23,14 +23,14 @@ class KtisSession:
     def __init__(self, user_id, passwd):
         self.req_session = requests.Session()
         self.req_session.get(self.KTIS_SECURE_URL)
-        login_request = self.req_session.post("{}kmu/com.Login.do?".format(self.KTIS_SECURE_URL),
+        login_request = self.req_session.post("{0}kmu/com.Login.do?".format(self.KTIS_SECURE_URL),
                                               data={'txt_user_id': user_id, 'txt_passwd': passwd})
         self.account = user_id
         self.is_valid = "frameset" in login_request.text
 
     def get_info(self):
         if self.is_valid:
-            info_request = self.req_session.post("{}kmu/usa.Usa0215qAGet01.do",
+            info_request = self.req_session.post("{0}kmu/usa.Usa0215qAGet01.do",
                                                  data={'nfkey': None, 'pFolder': "%C7%D0%C0%FB%BD%C3%BD%BA%C5%DB",
                                                        'ServiceID': self.account})
             info_list = []
@@ -58,7 +58,7 @@ def lambda_handler(event, context):
                 return Response({'err': "Authenticate failed"}, 401)
         else:
             return Response({'err': "Missing field"}, 400)
-    except json.JSONDecodeError:
+    except (json.JSONDecodeError, TypeError):
         return Response({'err': "Invalid request format"}, 400)
     except Exception as e:
         print("Unknown Error at lambda_handler: %s" % str(e))
