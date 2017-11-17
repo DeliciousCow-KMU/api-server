@@ -30,7 +30,7 @@ class KtisSession:
 
     def get_info(self):
         if self.is_valid:
-            info_request = self.req_session.post("{0}kmu/usa.Usa0215qAGet01.do",
+            info_request = self.req_session.post("{0}kmu/usa.Usa0215qAGet01.do".format(self.KTIS_SECURE_URL),
                                                  data={'nfkey': None, 'pFolder': "%C7%D0%C0%FB%BD%C3%BD%BA%C5%DB",
                                                        'ServiceID': self.account})
             info_list = []
