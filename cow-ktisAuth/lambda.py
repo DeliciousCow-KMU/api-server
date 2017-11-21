@@ -51,14 +51,19 @@ def lambda_handler(event, context):
         query = json.loads(event["body"])
         query = (query.get("user_id"), query.get("passwd"))
         if query[0] and query[1]:
+            print("Session attempted @%s" % query[0])
             session = KtisSession(*query)
             if session.is_valid:
+                print("SESSION VALID (200)")
                 return Response({'data': session.get_info()})
             else:
+                print("SESSION INVALID (401)")
                 return Response({'err': "Authenticate failed"}, 401)
         else:
+            print("[Missing field]\nuser_id: {0}\npasswd: {1}".format(bool(query[0]), bool(query[1])))
             return Response({'err': "Missing field"}, 400)
     except (json.JSONDecodeError, TypeError):
+        print("[Invalid format]")
         return Response({'err': "Invalid request format"}, 400)
     except Exception as e:
         print("Unknown Error at lambda_handler: %s" % str(e))
